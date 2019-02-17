@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author yuuto
+ *
+ */
+module JavaPractice {
+}
