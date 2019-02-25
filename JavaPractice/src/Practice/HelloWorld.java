@@ -1,4 +1,4 @@
-package HelloWorld;
+package Practice;
 
 import java.util.*;
 
@@ -33,6 +33,7 @@ public class HelloWorld
 		
 		System.out.println(arrayList.toString());
 		System.out.println("The largest number is " + max(doubleArray) + ".");
+		System.out.println(arrayList.getClass().getName());
 	}
 
 }
