@@ -31,9 +31,11 @@ public class HelloWorld
 			doubleArray[i] = arrayList.get(i);
 		}
 		
+		String className = ArrayList.class.getName();
+		
 		System.out.println(arrayList.toString());
 		System.out.println("The largest number is " + max(doubleArray) + ".");
-		System.out.println(arrayList.getClass().getName());
+		System.out.println(Objects.equals(ArrayList.class, arrayList.getClass()) + " " + className);
 	}
 
 }
