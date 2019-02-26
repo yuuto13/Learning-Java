@@ -10,20 +10,30 @@ import java.lang.reflect.*;
  * @author Yang Yudong
  * @issues
  * 1. Array types' name not right, [L at fornt and ; at back
- * 2. User input
+ * 2. 
  */
 
 public class ClassPrinter{
 	
 	public static void main(String[] args) {
+		String className;
+		
+		if(args.length > 0) {
+			className = args[0];
+		}
+		else {
+			Scanner in = new Scanner(System.in);
+			System.out.println("Please enter a class name (e.g. java.lang.Double):");
+			className = in.next();
+		}
+		
 		try {
-			Class cl = Class.forName("java.lang.Double");
+			Class cl = Class.forName(className);
 			ClassPrinter.printClass(cl);
 		}
 		catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
-//		System.out.println(Modifier.toString(5));
 	}
 	
 	/* printConstructors()
@@ -109,11 +119,16 @@ public class ClassPrinter{
 	public static String printClass(Class cl) {
 		
 		StringBuilder sb = new StringBuilder();
+		Class supercl = cl.getSuperclass();
+		
 		String name = cl.getName();
+		String inheritance = (supercl != null && supercl != Object.class) 
+						   ? (" extends " + supercl.getName()) : "";
 		String modifier = Modifier.toString(cl.getModifiers());
 		
+		
 		sb.append(modifier + (modifier.length() > 0 ? " " : "") 
-				+ "class" + name 					 + "\n{\n"
+				+ "class" + name + inheritance		 + "\n{\n"
 				+ ClassPrinter.printConstructors(cl) + "\n"
 				+ ClassPrinter.printMethods(cl) 	 + "\n"
 				+ ClassPrinter.printFields(cl) 		 + "}");
