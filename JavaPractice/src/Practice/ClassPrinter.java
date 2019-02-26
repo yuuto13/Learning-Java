@@ -6,15 +6,14 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out all features of a class.
- * @version 1.0
+ * @version 1.1
  * @author Yang Yudong
  * @issues
- * 1. Array types' name not right, [L at fornt and ; at back
- * 2. 
+ * 1. sort Methods or make them list look nicer
  */
 
 public class ClassPrinter{
-	
+
 	public static void main(String[] args) {
 		String className;
 		
@@ -45,20 +44,17 @@ public class ClassPrinter{
 		StringBuilder sb = new StringBuilder();
 		Constructor[] constructors = cl.getDeclaredConstructors();
 		for(Constructor c : constructors) {
-			String name = c.getName();
+			String name = simplify ? cl.getSimpleName() : cl.getName();
 			String modifier = Modifier.toString(c.getModifiers());
-			
-			sb.append("    ");
-			if(modifier.length() > 0) {
-				sb.append(modifier + " ");
-			}
-			sb.append(name + "(");
+			sb.append("    " + modifier 
+					+ (modifier.length() > 0 ? " " : "") 
+					+ name + "(");
 			Class[] paramTypes = c.getParameterTypes();
 			for(int i = 0; i < paramTypes.length; ++i) {
 				if(i > 0) {
 					sb.append(", ");
 				}
-				sb.append(paramTypes[i].getName());
+				sb.append(simplify ? paramTypes[i].getSimpleName() : paramTypes[i].getName());
 			}
 			sb.append(");\n");
 		}
@@ -77,13 +73,15 @@ public class ClassPrinter{
 		Method[] methods = cl.getDeclaredMethods();
 		for(Method m : methods) {
 			String name = m.getName();
-			String returnType = m.getReturnType().getName();
+			String returnType = simplify ? m.getReturnType().getSimpleName() 
+					                     : m.getReturnType().getName();
 			String modifier = Modifier.toString(m.getModifiers());
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
 					+ returnType + " " + name + "(");
 			Class[] paramTypes = m.getParameterTypes();
 			for(int i = 0; i < paramTypes.length; ++i) {
-				sb.append((i > 0 ? ", " : "") + paramTypes[i].getName());
+				sb.append((i > 0 ? ", " : "") 
+						+ (simplify ? paramTypes[i].getSimpleName() : paramTypes[i].getName()));
 			}
 			sb.append(");\n");
 		}
@@ -102,7 +100,7 @@ public class ClassPrinter{
 		Field[] fields = cl.getDeclaredFields();
 		for(Field f : fields) {
 			String name = f.getName();
-			String type = f.getType().getName();
+			String type = simplify ? f.getType().getSimpleName() : f.getType().getName();
 			String modifier = Modifier.toString(f.getModifiers());
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
 					+ type + " " + name + ";\n");
@@ -121,14 +119,14 @@ public class ClassPrinter{
 		StringBuilder sb = new StringBuilder();
 		Class supercl = cl.getSuperclass();
 		
-		String name = cl.getName();
+		String name = simplify ? cl.getSimpleName() : cl.getName();
+		String superclName = simplify ? supercl.getSimpleName() : supercl.getName();
 		String inheritance = (supercl != null && supercl != Object.class) 
-						   ? (" extends " + supercl.getName()) : "";
+						   ? (" extends " + superclName) : "";
 		String modifier = Modifier.toString(cl.getModifiers());
 		
-		
 		sb.append(modifier + (modifier.length() > 0 ? " " : "") 
-				+ "class" + name + inheritance		 + "\n{\n"
+				+ "class " + name + inheritance		 + "\n{\n"
 				+ ClassPrinter.printConstructors(cl) + "\n"
 				+ ClassPrinter.printMethods(cl) 	 + "\n"
 				+ ClassPrinter.printFields(cl) 		 + "}");
@@ -138,19 +136,11 @@ public class ClassPrinter{
 		return lines;
 	}
 	
+	public static boolean simplify = true;
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	
 	
 }
