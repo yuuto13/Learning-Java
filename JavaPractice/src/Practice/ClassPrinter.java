@@ -9,7 +9,9 @@ import java.lang.reflect.*;
  * @version 1.1
  * @author Yang Yudong
  * @issues
- * 1. sort Methods or make them list look nicer
+ * 1. sort Methods or make them list look nicer;
+ * 2. simplify types of method's and constructors' parameters
+ * and methods' return type;
  */
 
 public class ClassPrinter{
@@ -19,11 +21,19 @@ public class ClassPrinter{
 		
 		if(args.length > 0) {
 			className = args[0];
+			if(args.length > 1) {
+				if(args[1] == "-n") {
+					ClassPrinter.simplify = false;
+				}
+			}
 		}
 		else {
 			Scanner in = new Scanner(System.in);
 			System.out.println("Please enter a class name (e.g. java.lang.Double):");
 			className = in.next();
+			System.out.println("Do you want a simplified version? (y/n)");
+			String answer = in.next();
+			if(answer == "n" || answer == "N") ClassPrinter.simplify = false;
 		}
 		
 		try {
@@ -36,8 +46,9 @@ public class ClassPrinter{
 	}
 	
 	/* printConstructors()
-	 * Prints all constructors of a class
+	 * Prints all constructors of a class.
 	 * @param cl a class
+	 * @return a string with all constructors of a class
 	 */
 	public static String printConstructors(Class cl) {
 		
@@ -64,8 +75,9 @@ public class ClassPrinter{
 	}
 	
 	/* printMethods()
-	 * Prints all methods of a class
+	 * Prints all methods of a class.
 	 * @param cl a class
+	 * @return a string with all methods of a class
 	 */
 	public static String printMethods(Class cl) {
 		
@@ -91,8 +103,9 @@ public class ClassPrinter{
 	}
 	
 	/* printFields()
-	 * Prints all fields of a class
+	 * Prints all fields of a class.
 	 * @param cl a class
+	 * @return a string with all fields of a class
 	 */
 	public static String printFields(Class cl) {
 		
@@ -100,10 +113,16 @@ public class ClassPrinter{
 		Field[] fields = cl.getDeclaredFields();
 		for(Field f : fields) {
 			String name = f.getName();
-			String type = simplify ? f.getType().getSimpleName() : f.getType().getName();
 			String modifier = Modifier.toString(f.getModifiers());
+			String typeAppendage = "";
+			Class type = f.getType();
+			if(f.getType().isArray()) {
+				type = f.getType().getComponentType();
+				typeAppendage = "[]";
+			}
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
-					+ type + " " + name + ";\n");
+					+ (simplify ? type.getSimpleName() : type.getName())
+					+ typeAppendage + " " + name + ";\n");
 		}
 		String lines = sb.toString();
 		//System.out.println(lines);
@@ -111,8 +130,9 @@ public class ClassPrinter{
 	}
 	
 	/* printClass()
-	 * Prints all features of a class
+	 * Prints all features of a class.
 	 * @param cl a class
+	 * @return a string with all features of a class
 	 */
 	public static String printClass(Class cl) {
 		
@@ -138,9 +158,4 @@ public class ClassPrinter{
 	
 	public static boolean simplify = true;
 
-	
-
-
-	
-	
 }
