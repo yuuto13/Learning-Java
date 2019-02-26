@@ -114,6 +114,7 @@ public class ClassPrinter{
 		for(Field f : fields) {
 			String name = f.getName();
 			String modifier = Modifier.toString(f.getModifiers());
+			//----------------------------------------------------------implement when type is array
 			String typeAppendage = "";
 			Class type = f.getType();
 			if(f.getType().isArray()) {
