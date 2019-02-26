@@ -10,8 +10,7 @@ import java.lang.reflect.*;
  * @author Yang Yudong
  * @issues
  * 1. sort Methods or make them list look nicer;
- * 2. simplify types of method's and constructors' parameters
- * and methods' return type;
+ * 2. simplify types of method's and constructors' parameters;
  */
 
 public class ClassPrinter{
@@ -85,11 +84,16 @@ public class ClassPrinter{
 		Method[] methods = cl.getDeclaredMethods();
 		for(Method m : methods) {
 			String name = m.getName();
-			String returnType = simplify ? m.getReturnType().getSimpleName() 
-					                     : m.getReturnType().getName();
 			String modifier = Modifier.toString(m.getModifiers());
+			String appendage = "";
+			Class returnType = m.getReturnType();
+			if(returnType.isArray()) {
+				returnType = returnType.getComponentType();
+				appendage = "[]";
+			}
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
-					+ returnType + " " + name + "(");
+					+ (simplify ? returnType.getSimpleName() : returnType.getName())
+					+ appendage + " " + name + "(");
 			Class[] paramTypes = m.getParameterTypes();
 			for(int i = 0; i < paramTypes.length; ++i) {
 				sb.append((i > 0 ? ", " : "") 
@@ -115,15 +119,15 @@ public class ClassPrinter{
 			String name = f.getName();
 			String modifier = Modifier.toString(f.getModifiers());
 			//----------------------------------------------------------implement when type is array
-			String typeAppendage = "";
+			String appendage = "";
 			Class type = f.getType();
-			if(f.getType().isArray()) {
-				type = f.getType().getComponentType();
-				typeAppendage = "[]";
+			if(type.isArray()) {
+				type = type.getComponentType();
+				appendage = "[]";
 			}
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
 					+ (simplify ? type.getSimpleName() : type.getName())
-					+ typeAppendage + " " + name + ";\n");
+					+ appendage + " " + name + ";\n");
 		}
 		String lines = sb.toString();
 		//System.out.println(lines);
