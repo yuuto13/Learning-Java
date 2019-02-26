@@ -31,8 +31,8 @@ public class ClassPrinter{
 			System.out.println("Please enter a class name (e.g. java.lang.Double):");
 			className = in.next();
 			System.out.println("Do you want a simplified version? (y/n)");
-			String answer = in.next();
-			if(answer == "n" || answer == "N") ClassPrinter.simplify = false;
+			String answer = in.next().toLowerCase();
+			if(answer.charAt(0) == 'n') ClassPrinter.simplify = false;
 		}
 		
 		try {
