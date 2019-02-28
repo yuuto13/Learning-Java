@@ -3,7 +3,7 @@ package Practice;
 import java.util.*;
 import java.lang.reflect.*;
 
-/*
+/* Java Core Technics 201 or 218
  * This class allows you to analyze what fields
  * does a object has and what are their value.
  * @version 1.0 2.26.2019
