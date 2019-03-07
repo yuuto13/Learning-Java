@@ -1,12 +1,13 @@
 package Practice;
 
 import java.util.*;
+import java.util.function.*;
 
 public class HelloWorld 
 {
 	public static void main(String[] args)
 	{
-		repeat(10, () -> System.out.println("ha"));
+		repeat(10, i -> System.out.println(i));
 	}
 
 	public static double max(double... numbers)
@@ -20,13 +21,12 @@ public class HelloWorld
 		return largest;
 	}
 	
-	public static void repeat(int times, Runnable action) {
+	public static void repeat(int times, IntConsumer action) {
 		for(int i = 0; i < times; ++i) {
-			action.run();
+			action.accept(i);
 		}
 	}
 }
-
 
 //Unicode & Math
 //import static java.lang.Math.*;
