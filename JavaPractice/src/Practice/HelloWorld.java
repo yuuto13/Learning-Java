@@ -4,6 +4,11 @@ import java.util.*;
 
 public class HelloWorld 
 {
+	public static void main(String[] args)
+	{
+		repeat(10, () -> System.out.println("ha"));
+	}
+
 	public static double max(double... numbers)
 	{
 		double largest = Double.NEGATIVE_INFINITY;
@@ -15,29 +20,11 @@ public class HelloWorld
 		return largest;
 	}
 	
-	public static void main(String[] args)
-	{
-		int[] array = { 1, 1, 3, 3, 9, 7 };
-		ArrayList<Double> arrayList = new ArrayList<>();
-		for(int i = 0; i < array.length; i++)
-		{
-			arrayList.add((double)array[i]);
+	public static void repeat(int times, Runnable action) {
+		for(int i = 0; i < times; ++i) {
+			action.run();
 		}
-		arrayList.remove(arrayList.size()-1);
-		arrayList.add(arrayList.size()-1, arrayList.get(arrayList.size()-1));
-		double[] doubleArray = new double[arrayList.size()];
-		for(int i = 0; i < arrayList.size(); ++i)
-		{
-			doubleArray[i] = arrayList.get(i);
-		}
-		
-		String className = ArrayList.class.getName();
-		
-		System.out.println(arrayList.toString());
-		System.out.println("The largest number is " + max(doubleArray) + ".");
-		System.out.println(Objects.equals(ArrayList.class, arrayList.getClass()) + " " + className);
 	}
-
 }
 
 
@@ -73,3 +60,21 @@ public class HelloWorld
 //int[] array = { 1, 1, 3, 3, 9, 7 };
 //System.out.println(array.toString());
 //System.out.println(Arrays.toString(array));
+
+//int[] array = { 1, 1, 3, 3, 9, 7 };
+//ArrayList<Double> arrayList = new ArrayList<>();
+//for(int i = 0; i < array.length; i++)
+//{
+//	arrayList.add((double)array[i]);
+//}
+//arrayList.remove(arrayList.size()-1);
+//arrayList.add(arrayList.size()-1, arrayList.get(arrayList.size()-1));
+//double[] doubleArray = new double[arrayList.size()];
+//for(int i = 0; i < arrayList.size(); ++i)
+//{
+//	doubleArray[i] = arrayList.get(i);
+//}
+//String className = ArrayList.class.getName();
+//System.out.println(arrayList.toString());
+//System.out.println("The largest number is " + max(doubleArray) + ".");
+//System.out.println(Objects.equals(ArrayList.class, arrayList.getClass()) + " " + className);
