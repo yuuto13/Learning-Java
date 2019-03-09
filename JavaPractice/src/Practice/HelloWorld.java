@@ -2,12 +2,27 @@ package Practice;
 
 import java.util.*;
 import java.util.function.*;
+import creatures.*;
 
 public class HelloWorld 
 {
 	public static void main(String[] args)
 	{
-		repeat(10, i -> System.out.println(i));
+		repeat(5, i -> System.out.println(i));
+		
+		int[] counter = new int[1];
+		Animal[] animals = new Animal[100];
+		for(int i = 0; i < animals.length; ++i) {
+			animals[99-i] = new Animal() {
+				public int compareTo(Animal other) {
+					counter[0]++;
+					return super.compareTo(other);
+				}
+			};
+		}
+		//Arrays.sort(animals);
+		ArrayManipulator.maxMin(animals);
+		System.out.println(counter[0] + " comparisons.");
 	}
 
 	public static double max(double... numbers)
@@ -25,6 +40,53 @@ public class HelloWorld
 		for(int i = 0; i < times; ++i) {
 			action.accept(i);
 		}
+	}
+}
+
+class ArrayManipulator {
+	
+	public static class Pair {
+		private Object first;
+		private Object second;
+		
+		public Pair(Object first, Object second) {
+			this.first = first;
+			this.second = second;
+		}
+		
+		public Object getFirst() { return first; }
+		public Object getSecond() { return second; }
+	}
+	public static class DoublePair {
+		private double first;
+		private double second;
+		
+		public DoublePair(double first, double second) {
+			this.first = first;
+			this.second = second;
+		}
+		
+		public double getFirst() { return first; }
+		public double getSecond() { return second; }
+	}
+	
+	public static Pair maxMin(Comparable[] array) {
+		Comparable max = array[0];
+		Comparable min = array[0];
+		for(int i = 1; i < array.length; ++i) {
+			if(array[i].compareTo(max) > 0) max = array[i];
+			if(array[i].compareTo(min) < 0) min = array[i];
+		}
+		return new Pair(max, min);
+	}
+	public static DoublePair doubleMaxMin(double[] array) {
+		double max = Double.MIN_VALUE;
+		double min = Double.MAX_VALUE;
+		for(int i = 0; i < array.length; ++i) {
+			if(array[i] > max) max = array[i];
+			if(array[i] < min) min = array[i];
+		}
+		return new DoublePair(max, min);
 	}
 }
 
