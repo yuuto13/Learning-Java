@@ -23,6 +23,8 @@ public class HelloWorld
 		//Arrays.sort(animals);
 		ArrayManipulator.maxMin(animals);
 		System.out.println(counter[0] + " comparisons.");
+		
+		StackTraceTest.factorial(0);
 	}
 
 	public static double max(double... numbers)
@@ -87,6 +89,23 @@ class ArrayManipulator {
 			if(array[i] < min) min = array[i];
 		}
 		return new DoublePair(max, min);
+	}
+}
+
+class StackTraceTest {
+	public static int factorial(int number) {
+		System.out.println("factorial(" + number + "):");
+		StackTraceElement[] elements = new Throwable().getStackTrace();
+		for(StackTraceElement element : elements) {
+			System.out.println(element);
+		}
+		int result;
+		if(number <= 1)
+			result = 1;
+		else
+			result = number * factorial(number - 1);
+		System.out.println("return " + result);
+		return result;
 	}
 }
 
