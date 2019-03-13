@@ -2,7 +2,7 @@ package creatures;
 
 import java.util.*;
 
-public class Animal 
+public class Animal implements Comparable<Animal>
 {
 	public Animal() {
 		animalAmount++;
@@ -19,6 +19,9 @@ public class Animal
 	}
 
 	public String getName() { return name; }
+	public int compareTo(Animal other) {
+		return (int)(id - other.id);
+	}
 	
 	private long id;
 	private static long animalAmount = 0;
@@ -30,7 +33,7 @@ public class Animal
 	private enum HealthState{ healthy, ill }
 	//private HealthState healthState = HealthState.healthy;
 
-
+	
 	
 	
 	
