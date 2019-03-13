@@ -23,7 +23,7 @@ public class HelloWorld
 		//Arrays.sort(animals);
 		ArrayManipulator.maxMin(animals);
 		System.out.println(counter[0] + " comparisons.");
-		
+
 		StackTraceTest.factorial(2);
 		StackTraceElement[] elements = new Throwable().getStackTrace();
 		for(StackTraceElement element : elements) {
