@@ -40,7 +40,8 @@ public class ClassPrinter{
 			ClassPrinter.printClass(cl);
 		}
 		catch(ClassNotFoundException e){
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Class not found! Program ended.");
 		}
 	}
 	
