@@ -33,10 +33,11 @@ public class ClassPrinter{
 			System.out.println("Do you want a simplified version? (y/n)");
 			String answer = in.next().toLowerCase();
 			if(answer.charAt(0) == 'n') ClassPrinter.simplify = false;
+			in.close();
 		}
 		
 		try {
-			Class cl = Class.forName(className);
+			Class<?> cl = Class.forName(className);
 			ClassPrinter.printClass(cl);
 		}
 		catch(ClassNotFoundException e){
@@ -50,17 +51,17 @@ public class ClassPrinter{
 	 * @param cl a class
 	 * @return a string with all constructors of a class
 	 */
-	public static String printConstructors(Class cl) {
+	public static String printConstructors(Class<?> cl) {
 		
 		StringBuilder sb = new StringBuilder();
-		Constructor[] constructors = cl.getDeclaredConstructors();
-		for(Constructor c : constructors) {
+		Constructor<?>[] constructors = cl.getDeclaredConstructors();
+		for(Constructor<?> c : constructors) {
 			String name = simplify ? cl.getSimpleName() : cl.getName();
 			String modifier = Modifier.toString(c.getModifiers());
 			sb.append("    " + modifier 
 					+ (modifier.length() > 0 ? " " : "") 
 					+ name + "(");
-			Class[] paramTypes = c.getParameterTypes();
+			Class<?>[] paramTypes = c.getParameterTypes();
 			for(int i = 0; i < paramTypes.length; ++i) {
 				if(i > 0) {
 					sb.append(", ");
@@ -79,7 +80,7 @@ public class ClassPrinter{
 	 * @param cl a class
 	 * @return a string with all methods of a class
 	 */
-	public static String printMethods(Class cl) {
+	public static String printMethods(Class<?> cl) {
 		
 		StringBuilder sb = new StringBuilder();
 		Method[] methods = cl.getDeclaredMethods();
@@ -87,7 +88,7 @@ public class ClassPrinter{
 			String name = m.getName();
 			String modifier = Modifier.toString(m.getModifiers());
 			String appendage = "";
-			Class returnType = m.getReturnType();
+			Class<?> returnType = m.getReturnType();
 			if(returnType.isArray()) {
 				returnType = returnType.getComponentType();
 				appendage = "[]";
@@ -95,7 +96,7 @@ public class ClassPrinter{
 			sb.append("    " + modifier + (modifier.length() > 0 ? " " : "")
 					+ (simplify ? returnType.getSimpleName() : returnType.getName())
 					+ appendage + " " + name + "(");
-			Class[] paramTypes = m.getParameterTypes();
+			Class<?>[] paramTypes = m.getParameterTypes();
 			for(int i = 0; i < paramTypes.length; ++i) {
 				sb.append((i > 0 ? ", " : "") 
 						+ (simplify ? paramTypes[i].getSimpleName() : paramTypes[i].getName()));
@@ -112,7 +113,7 @@ public class ClassPrinter{
 	 * @param cl a class
 	 * @return a string with all fields of a class
 	 */
-	public static String printFields(Class cl) {
+	public static String printFields(Class<?> cl) {
 		
 		StringBuilder sb = new StringBuilder();
 		Field[] fields = cl.getDeclaredFields();
@@ -121,7 +122,7 @@ public class ClassPrinter{
 			String modifier = Modifier.toString(f.getModifiers());
 			//----------------------------------------------------------implement when type is array
 			String appendage = "";
-			Class type = f.getType();
+			Class<?> type = f.getType();
 			if(type.isArray()) {
 				type = type.getComponentType();
 				appendage = "[]";
@@ -140,10 +141,10 @@ public class ClassPrinter{
 	 * @param cl a class
 	 * @return a string with all features of a class
 	 */
-	public static String printClass(Class cl) {
+	public static String printClass(Class<?> cl) {
 		
 		StringBuilder sb = new StringBuilder();
-		Class supercl = cl.getSuperclass();
+		Class<?> supercl = cl.getSuperclass();
 		
 		String name = simplify ? cl.getSimpleName() : cl.getName();
 		String superclName = simplify ? supercl.getSimpleName() : supercl.getName();
