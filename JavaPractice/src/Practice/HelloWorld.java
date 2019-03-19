@@ -2,6 +2,7 @@ package Practice;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.logging.*;
 import creatures.*;
 
 public class HelloWorld 
@@ -24,7 +25,7 @@ public class HelloWorld
 		ArrayManipulator.maxMin(animals);
 		System.out.println(counter[0] + " comparisons.");
 
-		StackTraceTest.factorial(2);
+		//StackTraceTest.factorial(2);
 		StackTraceElement[] elements = new Throwable().getStackTrace();
 		for(StackTraceElement element : elements) {
 			System.out.println(element.getFileName());
@@ -34,6 +35,8 @@ public class HelloWorld
 			System.out.println(element.getModuleName());
 			System.out.println(element.getModuleVersion());
 		}
+		Logger.getGlobal().info("Print Stack Trace");
+		Thread.dumpStack();
 	}
 
 	public static double max(double... numbers)
@@ -55,49 +58,31 @@ public class HelloWorld
 }
 
 class ArrayManipulator {
-	
-	public static class Pair {
-		private Object first;
-		private Object second;
+
+	//Generic class test
+	public static class Pair<T> {
+		private T first;
+		private T second;
 		
-		public Pair(Object first, Object second) {
+		public Pair(T first, T second) {
 			this.first = first;
 			this.second = second;
 		}
 		
-		public Object getFirst() { return first; }
-		public Object getSecond() { return second; }
-	}
-	public static class DoublePair {
-		private double first;
-		private double second;
-		
-		public DoublePair(double first, double second) {
-			this.first = first;
-			this.second = second;
-		}
-		
-		public double getFirst() { return first; }
-		public double getSecond() { return second; }
+		public T getFirst() { return first; }
+		public T getSecond() { return second; }
+		public void setFirst(T first) { this.first = first; }
+		public void setSecond(T second) { this.second = second; }
 	}
 	
-	public static Pair maxMin(Comparable[] array) {
+	public static Pair<Comparable> maxMin(Comparable[] array) {
 		Comparable max = array[0];
 		Comparable min = array[0];
 		for(int i = 1; i < array.length; ++i) {
 			if(array[i].compareTo(max) > 0) max = array[i];
 			if(array[i].compareTo(min) < 0) min = array[i];
 		}
-		return new Pair(max, min);
-	}
-	public static DoublePair doubleMaxMin(double[] array) {
-		double max = Double.MIN_VALUE;
-		double min = Double.MAX_VALUE;
-		for(int i = 0; i < array.length; ++i) {
-			if(array[i] > max) max = array[i];
-			if(array[i] < min) min = array[i];
-		}
-		return new DoublePair(max, min);
+		return new Pair<Comparable>(max, min);
 	}
 }
 
