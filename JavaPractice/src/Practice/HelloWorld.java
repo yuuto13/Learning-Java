@@ -1,5 +1,7 @@
 package Practice;
 
+import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.*;
 import java.util.logging.*;
@@ -11,19 +13,17 @@ public class HelloWorld
 	{
 		repeat(5, i -> System.out.println(i));
 		
-		int[] counter = new int[1];
-		Animal[] animals = new Animal[100];
-		for(int i = 0; i < animals.length; ++i) {
-			animals[99-i] = new Animal() {
-				public int compareTo(Animal other) {
-					counter[0]++;
-					return super.compareTo(other);
-				}
-			};
-		}
-		//Arrays.sort(animals);
-		ArrayManipulator.maxMin(animals);
-		System.out.println(counter[0] + " comparisons.");
+		LocalDate[] dates = {
+				LocalDate.of(1996, 4, 13),
+				LocalDate.of(2018, 11, 11),
+				LocalDate.of(1919, 2, 20),
+				LocalDate.of(1949, 10, 10),
+				LocalDate.of(2011, 11, 20),
+				LocalDate.of(1988, 2, 15)
+		};
+		ArrayAlg.Pair<LocalDate> p = ArrayAlg.maxMin(dates);
+		System.out.println("max: " + p.getFirst());
+		System.out.println("min: " + p.getSecond());
 
 		//StackTraceTest.factorial(2);
 		StackTraceElement[] elements = new Throwable().getStackTrace();
@@ -35,8 +35,8 @@ public class HelloWorld
 			System.out.println(element.getModuleName());
 			System.out.println(element.getModuleVersion());
 		}
-		Logger.getGlobal().info("Print Stack Trace");
-		Thread.dumpStack();
+		//Logger.getGlobal().info("Print Stack Trace");
+		//Thread.dumpStack();
 	}
 
 	public static double max(double... numbers)
@@ -57,7 +57,7 @@ public class HelloWorld
 	}
 }
 
-class ArrayManipulator {
+class ArrayAlg {
 
 	//Generic class test
 	public static class Pair<T> {
@@ -74,15 +74,27 @@ class ArrayManipulator {
 		public void setFirst(T first) { this.first = first; }
 		public void setSecond(T second) { this.second = second; }
 	}
-	
-	public static Pair<Comparable> maxMin(Comparable[] array) {
-		Comparable max = array[0];
-		Comparable min = array[0];
+	//Generic method test
+	public static <T extends Comparable<? super T>> Pair<T> maxMin(T[] array) {
+		if(array == null || array.length == 0) {
+			return null;
+		}
+		T max = array[0];
+		T min = array[0];
 		for(int i = 1; i < array.length; ++i) {
 			if(array[i].compareTo(max) > 0) max = array[i];
 			if(array[i].compareTo(min) < 0) min = array[i];
 		}
-		return new Pair<Comparable>(max, min);
+		return new Pair<T>(max, min);
+	}
+	@SuppressWarnings("deprecation")
+	public static <T> Pair<T> makePair(Class<T> cl) {
+		try {
+			return new Pair<>(cl.newInstance(), cl.newInstance());
+		}
+		catch(Exception e) {
+			return null;
+		}
 	}
 }
 
@@ -153,3 +165,23 @@ class StackTraceTest {
 //System.out.println(arrayList.toString());
 //System.out.println("The largest number is " + max(doubleArray) + ".");
 //System.out.println(Objects.equals(ArrayList.class, arrayList.getClass()) + " " + className);
+
+//Anonymous class
+//int[] counter = new int[1];
+//Animal[] animals = new Animal[100];
+//for(int i = 0; i < animals.length; ++i) {
+//	animals[99-i] = new Animal() {
+//		public int compareTo(Animal other) {
+//			counter[0]++;
+//			return super.compareTo(other);
+//		}
+//	};
+//}
+//Arrays.sort(animals);
+//System.out.println(counter[0] + " comparisons.");
+
+
+
+
+
+
