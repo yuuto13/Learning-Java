@@ -83,7 +83,7 @@ public class ClassPrinter{
 		
 		StringBuilder sb = new StringBuilder();
 		Class<?> supercl = cl.getSuperclass();
-		Class<?>[] interfaces = cl.getInterfaces();
+		Type[] interfaces = cl.getGenericInterfaces();
 		
 		sb.append(cl.toGenericString());
 		
@@ -93,7 +93,7 @@ public class ClassPrinter{
 		if(interfaces.length != 0) {
 			sb.append(" implements ");
 			for(int i = 0; i < interfaces.length; ++i) {
-				sb.append((i > 0 ? ", " : "") + interfaces[i].getName());
+				sb.append((i > 0 ? ", " : "") + interfaces[i].getTypeName());
 			}
 		}
 		sb.append("\n{\n");
