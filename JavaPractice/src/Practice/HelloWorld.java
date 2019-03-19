@@ -37,6 +37,10 @@ public class HelloWorld
 		}
 		//Logger.getGlobal().info("Print Stack Trace");
 		//Thread.dumpStack();
+		
+		Class<?> cl = ArrayAlg.class;
+		System.out.println(cl.toGenericString());
+		System.out.println(cl.toString());
 	}
 
 	public static double max(double... numbers)
@@ -57,7 +61,7 @@ public class HelloWorld
 	}
 }
 
-class ArrayAlg {
+class ArrayAlg<T> {
 
 	//Generic class test
 	public static class Pair<T> {
@@ -112,6 +116,24 @@ class StackTraceTest {
 			result = number * factorial(number - 1);
 		System.out.println("return " + result);
 		return result;
+	}
+}
+
+class Test extends HelloWorld implements Comparable<Test>, Serializable{
+
+	private static final long serialVersionUID = 1L;
+	private Integer[] numbers;
+	
+	public Test() {
+		numbers = new Integer[10];
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Comparable<? super T>> void testMethod(T... t) {
+		System.out.print(numbers[0] + ". " + t[0].toString());
+	}
+	public int compareTo(Test t) {
+		return 0;
 	}
 }
 
