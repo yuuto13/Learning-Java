@@ -54,6 +54,7 @@ public class SimpleClassPrinter{
 				}
 				sb.append(paramTypes[i].getSimpleName());
 			}
+			sb.append(");\n");
 		}
 		String lines = sb.toString();
 		//System.out.println(lines);
@@ -104,7 +105,6 @@ public class SimpleClassPrinter{
 		for(Field f : fields) {
 			String name = f.getName();
 			String modifier = Modifier.toString(f.getModifiers());
-			//----------------------------------------------------------implement when type is array
 			String appendage = "";
 			Class<?> type = f.getType();
 			if(type.isArray()) {
@@ -128,18 +128,28 @@ public class SimpleClassPrinter{
 		
 		StringBuilder sb = new StringBuilder();
 		Class<?> supercl = cl.getSuperclass();
+		Class<?>[] interfaces = cl.getInterfaces();
 		
 		String name = cl.getSimpleName();
 		String superclName = supercl.getSimpleName();
-		String inheritance = (supercl != null && supercl != Object.class) 
-						   ? (" extends " + superclName) : "";
 		String modifier = Modifier.toString(cl.getModifiers());
-		
+		String inheritance = "";
+		if(supercl != null && supercl != Object.class) {
+			inheritance = " extends " + superclName;
+		}
 		sb.append(modifier + (modifier.length() > 0 ? " " : "") 
-				+ "class " + name + inheritance		 + "\n{\n"
-				+ ClassPrinter.printConstructors(cl) + "\n"
-				+ ClassPrinter.printMethods(cl) 	 + "\n"
-				+ ClassPrinter.printFields(cl) 		 + "}");
+				+ "class " + name + inheritance);
+		
+		if(interfaces.length != 0) {
+			sb.append(" implements ");
+			for(int i = 0; i < interfaces.length; ++i) {
+				sb.append((i > 0 ? ", " : "") + interfaces[i].getSimpleName());
+			}
+		}
+		sb.append("\n{\n");
+		sb.append(SimpleClassPrinter.printFields(cl)      +  "\n"
+				+ SimpleClassPrinter.printConstructors(cl) + "\n"
+				+ SimpleClassPrinter.printMethods(cl)       + "}");
 		
 		String lines = sb.toString();
 		System.out.println(lines);
