@@ -1,45 +1,50 @@
 package Practice;
 
-import java.util.Scanner;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 public class MainClass {
 	
 	public static void main(String[] args) {
-		TalkingClock clock = new TalkingClock(20000, true);
-		clock.startTimePrinter();
-	}
-	
-}
+//		TalkingClock clock = new TalkingClock(10000, true);
+//		clock.startTimePrinter();
 
-//Test TimeCounter class
-//Scanner in = new Scanner(System.in);
-//System.out.println("Please input a time (10h10m10s):");
-//String time = in.next();
-//time = time.trim();
-//int h, m, s;
-//h = m = s = 0;
-//if(time.contains("h")) {
-//	h = Integer.parseInt(time.split("h")[0]);
-//	if(time.split("h").length > 1) 
-//		time = time.split("h")[1];
-//}
-//if(time.contains("m")) {
-//	m = Integer.parseInt(time.split("m")[0]);
-//	if(time.split("m").length > 1)
-//		time = time.split("m")[1];
-//}
-//if(time.contains("s")) {
-//	s = Integer.parseInt(time.replace("s", ""));
-//}
-//int timeInSeconds = 60*60*h + 60*m + s;
-//TimeCounter counter = new TimeCounter(timeInSeconds);
-//System.out.println("Count Down Starts!");
-//counter.startCounting();
-//JOptionPane.showMessageDialog(null, "Quit Counting?");
-//if(!counter.isOver()) {
-//	System.out.println("I'M NOT DONE YOU IDIOT! NOOOOOOO!");
-//}
-//System.exit(0);
+		List<String> a = new LinkedList<String>();
+		a.add("Alice");
+		a.add("Ben");
+		a.add("Cameron");
+		List<String> b = new LinkedList<String>();
+		b.add("Derek");
+		b.add("Emily");
+		b.add("Frank");
+		b.add("George");
+		System.out.println(a);
+		System.out.println(b);
+		
+		ListIterator<String> aIter = a.listIterator();
+		Iterator<String> bIter = b.iterator();
+
+		while(bIter.hasNext()) {
+			if(aIter.hasNext()) {
+				aIter.next();
+			}
+			aIter.add(bIter.next());
+		}
+		System.out.println(a);
+		
+		bIter = b.iterator();
+		while(bIter.hasNext()) {
+			bIter.next();
+			if(bIter.hasNext()) {
+				bIter.next();
+				bIter.remove();
+			}
+		}
+		System.out.println(b);
+		
+		a.removeAll(b);
+		System.out.println(a);
+	}
+}
 
