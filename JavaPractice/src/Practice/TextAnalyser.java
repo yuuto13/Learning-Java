@@ -14,10 +14,19 @@ public class TextAnalyser {
 	
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
-		System.out.println();//TODO: add user instructions
+		System.out.println("Please type in a text file address: ");
+		String fileName = in.nextLine();
+		TextAnalyser ta = new TextAnalyser();
+		ta.CreateFromFile(fileName);
+		ta.AnalyseText();
+		System.out.println("The text has " + ta.numWords + " words and " + ta.numDiffWords + " different words.");
+		System.out.println("Time Usage: " + ta.time + "s");
 	}
 	
-	private String text;
+	String text = "";
+	public int numWords;
+	public int numDiffWords;
+	public long time;
 	
 	public void CreateFromTest(String text) {
 		this.text = text;
@@ -28,8 +37,26 @@ public class TextAnalyser {
 		}
 		readFile(fileName);
 	}
-	public void readFile(String fileName) {
-		File file = new File(fileName);
+	public void AnalyseText() {
+		GetNumWords();
+	}
+	private void GetNumWords() {
+		Set<String> wordHashes = new HashSet<>();
+		String[] words = text.split(" ");
+		//String[] punctuations = ",.!?:;\"'-#()+-*/=".split("");
+		
+		time = System.currentTimeMillis();
+		for (int i = 0; i < words.length; i++) {
+			wordHashes.add(words[i]);
+		}
+		time = System.currentTimeMillis() - time;
+		
+		//Iterator<String> iter = wordHashes.iterator();
+		numWords = words.length;
+		numDiffWords = wordHashes.size();
+	}
+	private void readFile(String fileName) {
+		//File file = new File(fileName);
 		Reader reader = null;
 		try {
 			reader = new InputStreamReader(new FileInputStream(fileName));
@@ -42,16 +69,6 @@ public class TextAnalyser {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	public int GetNumWords() {
-		Set<String> wordHashes = new HashSet<>();
-		String[] words = text.split(" ");
-		
-		for (int i = 0; i < words.length; i++) {
-			wordHashes.add(words[i]);
-		}
-		//Iterator<String> iter = wordHashes.iterator();
-		return wordHashes.size();
 	}
 }
 
