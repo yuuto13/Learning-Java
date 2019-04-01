@@ -16,6 +16,7 @@ public class TextAnalyser {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Please type in a text file address: ");
 		String fileName = in.nextLine();
+		in.close();
 		TextAnalyser ta = new TextAnalyser();
 		ta.CreateFromFile(fileName);
 		ta.AnalyseText();

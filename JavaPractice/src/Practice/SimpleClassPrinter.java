@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out simple features of a class.
- * @version 1.2
+ * @version 1.2 
  */
 
 public class SimpleClassPrinter{
