@@ -1,8 +1,8 @@
 package Practice;
 
 import java.util.*;
-
-import javax.swing.JOptionPane;
+import creatures.Animal;
+import creatures.Animal.AnimalType;
 
 public class MainClass {
 	
@@ -45,6 +45,16 @@ public class MainClass {
 		
 		a.removeAll(b);
 		System.out.println(a);
+		
+		//--------------------- Test Map ----------------------
+		System.out.println();
+		
+		Map<String, Animal> pet = new HashMap<>();
+		pet.put("Alice", new Animal("Arya", AnimalType.cat));
+		pet.put("Ben", new Animal("Bobi", AnimalType.dog));
+		pet.put("Cameron", new Animal("Cody", AnimalType.fox));
+		
+		System.out.println(pet);
 	}
 }
 
