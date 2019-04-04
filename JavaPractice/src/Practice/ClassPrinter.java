@@ -157,6 +157,7 @@ public class ClassPrinter {
 		packageStr = "package " + packageName + ";\n\n";
 	}
 	void GetImports() {
+		String endChars = " ;,) {[<>\n";
 		String packageName = "";
 		String className = "";
 		int start, middle, end;
@@ -166,8 +167,7 @@ public class ClassPrinter {
 				
 				start = middle = end = i;
 				while(mainStr.charAt(start) != ' ' && mainStr.charAt(start) != '(') start--;
-				while(mainStr.charAt(end) != ')' && mainStr.charAt(end) != ';' && mainStr.charAt(end) != ',' 
-				   && mainStr.charAt(end) != ' ' && mainStr.charAt(end) != ';')       end++;
+				while(!endChars.contains("" + mainStr.charAt(end)))                    end++;
 				packageName = mainStr.substring(start + 1, middle);
 				className = mainStr.substring(middle + 1, end);
 				
