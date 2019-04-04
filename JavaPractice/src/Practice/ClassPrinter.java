@@ -7,81 +7,125 @@ import java.lang.reflect.*;
  * This class uses reflection library to 
  * print out all features of a class.
  * @version 1.2
- * @issues
- * 1. Use more Class<?> methods to clean up the code;
+ * @Todo
+ * 1. sort alphabetically
+ * 2. sort with length
  */
 
 public class ClassPrinter{
 
 	public static void main(String[] args) {
 		String className;
+		String version = "";
 		
 		if(args.length > 0) {
 			className = args[0];
-//			if(args.length > 1) {
-//				if(args[1] == "-n") {
-//					ClassPrinter.simplify = false;
-//				}
-//			}
+			if(args.length > 1) {
+				if(args[1] == "-n") {
+					version = "n";
+				}
+			}
 		}
 		else {
 			Scanner in = new Scanner(System.in);
 			System.out.println("Please enter a class name (e.g. java.lang.Double):");
 			className = in.next();
-//			System.out.println("Do you want a simplified version? (y/n)");
-//			String answer = in.next().toLowerCase();
-//			if(answer.charAt(0) == 'n') ClassPrinter.simplify = false;
+			System.out.println("Do you want to see the qualified names instead of imports? (y/n)");
+			version = in.next().toLowerCase();
 			in.close();
 		}
 		
 		try {
 			Class<?> cl = Class.forName(className);
-			ClassPrinter.printClass(cl);
+			ClassPrinter classPrinter = new ClassPrinter(cl);
+			
+			System.out.println();
+			if(version == "y") {
+				classPrinter.printClass();
+			} else {
+				classPrinter.printCLassWithImportedPackage();
+			}
 		}
 		catch(ClassNotFoundException e){
 			System.out.println("Class not found! Program ended.");
 		}
 	}
 	
-	public static String printConstructors(Class<?> cl) {
-		
-		StringBuilder sb = new StringBuilder();
-		Constructor<?>[] constructors = cl.getDeclaredConstructors();
-		for(Constructor<?> c : constructors) {
-			sb.append("    " + c.toGenericString() + ";\n");
-		}
-		String lines = sb.toString();
-		//System.out.println(lines);
-		return lines;
+	Class<?> cl;
+	Set<String> imports;
+	String className = "";
+	String packageName = "";
+	String packageStr = "";
+	String mainStr = "";
+	String oldMain = "";
+	
+	public ClassPrinter(Class<?> cl) {
+		this.cl = cl;
+		this.className = cl.getSimpleName();
+		this.packageName = cl.getPackageName();
+		imports = new TreeSet<>(Comparator.naturalOrder());
 	}
 	
-	public static String printMethods(Class<?> cl) {
+	public String printClass() {
+		String all;
+		
+		if(mainStr == "") GetClassString();
+			
+		if(oldMain != "") {
+			all = packageStr + oldMain;
+		}
+		else all = packageStr + mainStr;
+		System.out.println(all);
+		return all;
+	}
+	public String printCLassWithImportedPackage() {
+		
+		if(mainStr == "") GetClassString();
+		if(imports.size() == 0) {
+			oldMain = mainStr;
+			GetImports();
+		}
 		
 		StringBuilder sb = new StringBuilder();
-		Method[] methods = cl.getDeclaredMethods();
-		for(Method m : methods) {
-			sb.append("    " + m.toGenericString() + ";\n");
+		for(String i : imports) {
+			sb.append("import " + i + ".*;\n");
 		}
-		String lines = sb.toString();
-		//System.out.println(lines);
-		return lines;
-	}
-
-	public static String printFields(Class<?> cl) {
+		sb.append("\n");
+		String importStr = sb.toString();
 		
+		System.out.println(packageStr + importStr + mainStr);
+		return packageStr + importStr + mainStr;
+	}
+	String GetFields() {
 		StringBuilder sb = new StringBuilder();
 		Field[] fields = cl.getDeclaredFields();
 		for(Field f : fields) {
-			sb.append("    " + f.toGenericString() + ";\n");
+			if(f != null) 
+				sb.append("    " + f.toGenericString() + ";\n");
 		}
-		String lines = sb.toString();
-		//System.out.println(lines);
-		return lines;
+		return sb.toString();
 	}
-	
-	public static String printClass(Class<?> cl) {
-		
+	String GetConstructors() {
 		StringBuilder sb = new StringBuilder();
+		Constructor<?>[] constructors = cl.getDeclaredConstructors();
+		for(Constructor<?> c : constructors) {
+			if(c != null)
+				sb.append("    " + c.toGenericString() + ";\n");
+		}
+		return sb.toString();
+	}
+	String GetMethods() {
+		StringBuilder sb = new StringBuilder();
+		Method[] methods = cl.getDeclaredMethods();
+		for(Method m : methods) {
+			if(m != null)
+				sb.append("    " + m.toGenericString() + ";\n");
+		}
+		return sb.toString();
+	}
+	void GetClassString() {
+		StringBuilder sb = new StringBuilder();
+
 		Class<?> supercl = cl.getSuperclass();
 		Type[] interfaces = cl.getGenericInterfaces();
 		
@@ -93,18 +137,54 @@ public class ClassPrinter{
 		if(interfaces.length != 0) {
 			sb.append(" implements ");
 			for(int i = 0; i < interfaces.length; ++i) {
-				sb.append((i > 0 ? ", " : "") + interfaces[i].getTypeName());
+				sb.append((i > 0 ? "," : "") + interfaces[i].getTypeName());
 			}
 		}
 		sb.append("\n{\n");
-		sb.append(ClassPrinter.printFields(cl)       + "\n"
-				+ ClassPrinter.printConstructors(cl) + "\n"
-				+ ClassPrinter.printMethods(cl) 	  + "}");
+		
+		String fieldStr = GetFields();
+		String constructorStr = GetConstructors();
+		String methodStr = GetMethods();
+		
+		if(hasFields()) sb.append(fieldStr + "\n");
+		if(hasConstructors()) sb.append(constructorStr + "\n");
+		sb.append(methodStr + "}");
 
-		String lines = sb.toString();
-		System.out.println(lines);
-		return lines;
+		mainStr = sb.toString();
+		
+		mainStr = mainStr.replace(packageName + ".", "");
+		mainStr = mainStr.replace(className   + ".", "");
+		mainStr = mainStr.replace(",", ", ");		
+		
+		packageStr = "package " + packageName + ";\n\n";
+	}
+	void GetImports() {
+		//ArrayList<String> classes = ArrayList<String>();
+		String importName = "";
+		int start, end;
+		for(int i = mainStr.length()-1; i > 0; i--) {
+			if(mainStr.charAt(i) == '.') {
+				if(mainStr.charAt(i-1) == '.' || mainStr.charAt(i+1) == '.')
+					continue;
+				end = i;
+				i -= 2;
+				while(mainStr.charAt(i) != ' ' && mainStr.charAt(i) != '(') i--;
+				start = i + 1;
+				importName = mainStr.substring(start, end);
+				//System.out.print(importName);
+				imports.add(importName);
+				
+				mainStr = mainStr.replace(importName + ".", "");
+				
+				GetImports();
+				
+				break;
+			}
+		}
 	}
 	
-	//public static boolean simplify = true;
+	public String getClassName() { return className; }
+	public boolean hasFields() { return cl.getDeclaredFields().length != 0; }
+	public boolean hasConstructors() { return cl.getDeclaredConstructors().length != 0; }
+	public boolean hasMethods() { return cl.getDeclaredMethods().length != 0; }
 }
