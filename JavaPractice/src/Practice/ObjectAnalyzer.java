@@ -1,6 +1,6 @@
 package Practice;
 
-import java.util.*;
+//import java.util.*;
 import java.lang.reflect.*;
 
 /* Java Core Technics 201 or 218
@@ -27,7 +27,7 @@ public class ObjectAnalyzer {
 		
 		StringBuilder sb = new StringBuilder();
 		if(obj == null) return "null";
-		Class cl = obj.getClass();
+		Class<?> cl = obj.getClass();
 		if(cl == String.class) return obj.toString();
 		if(cl.isArray()) {
 			sb.append(cl.getComponentType().getSimpleName() + "[]{");

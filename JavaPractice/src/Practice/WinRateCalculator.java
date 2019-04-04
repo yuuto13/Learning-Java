@@ -14,6 +14,8 @@ public class WinRateCalculator {
 		System.out.println("How many times can you pick?");
 		int timesPicked = in.nextInt();
 		
+		in.close();
+		
 		double jackpotOdds = JackpotOddsCalculator(maxNumber, timesPicked);
 		
 		System.out.println("Your odds to win the jackpot are 1 in " + Math.round(1/jackpotOdds) + ". Good Luck!");

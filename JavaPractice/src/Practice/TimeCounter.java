@@ -51,6 +51,8 @@ class TimeCounter {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Please input a time (10h10m10s):");
 		String time = in.next();
+		in.close();
+		
 		time = time.trim();
 		int h, m, s;
 		h = m = s = 0;

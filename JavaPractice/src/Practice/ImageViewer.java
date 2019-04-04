@@ -1,6 +1,6 @@
 package Practice;
 
-import java.awt.*;
+//import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
@@ -23,6 +23,8 @@ public class ImageViewer {
 }
 
 class ImageViewerFrame extends JFrame {
+
+	private static final long serialVersionUID = 8525601478363315305L;
 	private static final int DEFAULT_WIDTH = 300;
 	private static final int DEFAULT_HEIGHT = 400;
 	private JLabel image;

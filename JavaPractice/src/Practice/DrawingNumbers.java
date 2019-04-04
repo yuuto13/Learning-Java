@@ -13,6 +13,7 @@ public class DrawingNumbers {
 		
 		System.out.println("How many numbers can you draw?");
 		int drawNumber = in.nextInt();
+		in.close();
 		
 		System.out.println("Drawing Numbers...");
 		
