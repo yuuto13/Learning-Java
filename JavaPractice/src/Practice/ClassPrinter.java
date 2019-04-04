@@ -12,12 +12,11 @@ import java.lang.reflect.*;
  * 2. sort with length
  */
 
-public class ClassPrinter{
+public class ClassPrinter {
 
 	public static void main(String[] args) {
 		String className;
 		String version = "";
-		
 		if(args.length > 0) {
 			className = args[0];
 			if(args.length > 1) {
@@ -34,11 +33,10 @@ public class ClassPrinter{
 			version = in.next().toLowerCase();
 			in.close();
 		}
-		
 		try {
 			Class<?> cl = Class.forName(className);
 			ClassPrinter classPrinter = new ClassPrinter(cl);
-			
+			//classPrinter.printClass();
 			System.out.println();
 			if(version == "y") {
 				classPrinter.printClass();
@@ -50,10 +48,10 @@ public class ClassPrinter{
 			System.out.println("Class not found! Program ended.");
 		}
 	}
+
 	
 	Class<?> cl;
 	Set<String> imports;
-	String className = "";
 	String packageName = "";
 	String packageStr = "";
 	String mainStr = "";
@@ -61,7 +59,6 @@ public class ClassPrinter{
 	
 	public ClassPrinter(Class<?> cl) {
 		this.cl = cl;
-		this.className = cl.getSimpleName();
 		this.packageName = cl.getPackageName();
 		imports = new TreeSet<>(Comparator.naturalOrder());
 	}
@@ -88,7 +85,7 @@ public class ClassPrinter{
 		
 		StringBuilder sb = new StringBuilder();
 		for(String i : imports) {
-			sb.append("import " + i + ".*;\n");
+			sb.append("import " + i + ";\n");
 		}
 		sb.append("\n");
 		String importStr = sb.toString();
@@ -152,28 +149,33 @@ public class ClassPrinter{
 
 		mainStr = sb.toString();
 		
-		mainStr = mainStr.replace(packageName + ".", "");
-		mainStr = mainStr.replace(className   + ".", "");
+		mainStr = mainStr.replace(getClassName() + ".", "");
+		mainStr = mainStr.replace(getClassName(), getSimpleName());
 		mainStr = mainStr.replace(",", ", ");		
 		
 		packageStr = "package " + packageName + ";\n\n";
 	}
 	void GetImports() {
-		String importName = "";
-		int start, end;
+		String packageName = "";
+		String className = "";
+		int start, middle, end;
 		for(int i = mainStr.length()-1; i > 0; i--) {
 			if(mainStr.charAt(i) == '.') {
-				if(mainStr.charAt(i-1) == '.' || mainStr.charAt(i+1) == '.')
-					continue;
-				end = i;
-				i -= 2;
-				while(mainStr.charAt(i) != ' ' && mainStr.charAt(i) != '(') i--;
-				start = i + 1;
-				importName = mainStr.substring(start, end);
-				//System.out.print(importName);
-				imports.add(importName);
+				if(mainStr.charAt(i-1) == '.' || mainStr.charAt(i+1) == '.') continue;
 				
-				mainStr = mainStr.replace(importName + ".", "");
+				start = middle = end = i;
+				while(mainStr.charAt(start) != ' ' && mainStr.charAt(start) != '(') start--;
+				while(mainStr.charAt(end) != ')' && mainStr.charAt(end) != ';' && mainStr.charAt(end) != ',' 
+				   && mainStr.charAt(end) != ' ' && mainStr.charAt(end) != ';')       end++;
+				packageName = mainStr.substring(start + 1, middle);
+				className = mainStr.substring(middle + 1, end);
+				
+				String importName = packageName + "." + className;
+				if(importName != getClassName()) {
+					imports.add(importName);
+				}
+				
+				mainStr = mainStr.replace(importName, className);
 				
 				GetImports();
 				
@@ -182,7 +184,8 @@ public class ClassPrinter{
 		}
 	}
 	
-	public String getClassName() { return className; }
+	public String getClassName() { return cl.getName(); }
+	public String getSimpleName() { return cl.getSimpleName(); } 
 	public boolean hasFields() { return cl.getDeclaredFields().length != 0; }
 	public boolean hasConstructors() { return cl.getDeclaredConstructors().length != 0; }
 	public boolean hasMethods() { return cl.getDeclaredMethods().length != 0; }
