@@ -121,6 +121,18 @@ class StackTraceTest {
 
 class Test extends HelloWorld implements Comparable<Test>, Serializable{
 
+	public static class TestInner {
+		float f;
+		
+		public TestInner() {
+			// TODO Auto-generated constructor stub
+		}
+		
+		public void name() {
+			
+		}
+	}
+	
 	private static final long serialVersionUID = 1L;
 	private Integer[] numbers;
 	
