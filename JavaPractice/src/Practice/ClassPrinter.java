@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out all features of a class.
- * @version 1.4
+ * @version 1.5
  * @Todo
  * 1. sort alphabetically
  * 2. sort with length
@@ -36,12 +36,13 @@ public class ClassPrinter {
 		try {
 			Class<?> cl = Class.forName(className);
 			ClassPrinter classPrinter = new ClassPrinter(cl);
+
 			//classPrinter.printClass();
 			System.out.println();
 			if(version == "y") {
 				classPrinter.printClass();
 			} else {
-				classPrinter.printCLassWithImportedPackage();
+				classPrinter.printClassWithImportedPackage();
 			}
 		}
 		catch(ClassNotFoundException e){
@@ -75,7 +76,7 @@ public class ClassPrinter {
 		System.out.println(all);
 		return all;
 	}
-	public String printCLassWithImportedPackage() {
+	public String printClassWithImportedPackage() {
 		
 		if(mainStr == "") GetClassString();
 		if(imports.size() == 0) {
@@ -176,9 +177,7 @@ public class ClassPrinter {
 				}
 				
 				mainStr = mainStr.replace(importName, className);
-				
 				GetImports();
-				
 				break;
 			}
 		}
