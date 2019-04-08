@@ -1,4 +1,4 @@
-package Practice;
+package usefultools;
 
 import java.util.*;
 import java.lang.reflect.*;
