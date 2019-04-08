@@ -11,9 +11,10 @@ public class HelloWorld
 {
 	public static void main(String[] args)
 	{
-		repeat(5, i -> System.out.println(i));
+		//repeat(5, i -> System.out.println(i));
 		
 		LocalDate[] dates = {
+				LocalDate.of(1492, 7, 29),
 				LocalDate.of(1996, 4, 13),
 				LocalDate.of(2018, 11, 11),
 				LocalDate.of(1919, 2, 20),
@@ -38,9 +39,16 @@ public class HelloWorld
 		//Logger.getGlobal().info("Print Stack Trace");
 		//Thread.dumpStack();
 		
-		Class<?> cl = ArrayAlg.class;
-		System.out.println(cl.toGenericString());
-		System.out.println(cl.toString());
+		System.out.println(ArrayAlg.max(Arrays.asList(dates)));
+		
+		List<LocalDate> dateList = Arrays.asList(dates);
+		System.out.println(dateList);
+		dateList.sort(null);
+		System.out.println(dateList);
+		dateList.sort(Comparator.reverseOrder());
+		System.out.println(dateList);
+		dateList.sort(Comparator.comparingInt(LocalDate::getMonthValue));
+		System.out.println(dateList);
 	}
 
 	public static double max(double... numbers)
@@ -99,6 +107,18 @@ class ArrayAlg<T> {
 		catch(Exception e) {
 			return null;
 		}
+	}
+	public static <T extends Comparable<? super T>> T max(Collection<T> c) {
+		if(c.isEmpty()) throw new NoSuchElementException();
+		Iterator<T> iter = c.iterator();
+		T largest = iter.next();
+		while(iter.hasNext()) {
+			T next = iter.next();
+			if(largest.compareTo(next) < 0) {
+				largest = next;
+			}
+		}
+		return largest;
 	}
 }
 
