@@ -49,12 +49,31 @@ public class MainClass {
 		//--------------------- Test Map ----------------------
 		System.out.println();
 		
-		Map<String, Animal> pet = new HashMap<>();
+		Map<String, Animal> pet = new LinkedHashMap<>();
 		pet.put("Alice", new Animal("Arya", AnimalType.cat));
 		pet.put("Ben", new Animal("Bobi", AnimalType.dog));
 		pet.put("Cameron", new Animal("Cody", AnimalType.fox));
 		
-		System.out.println(pet);
+		//How to iterate through a map
+		//---------------- primal version ----------------
+//		for(Map.Entry<String, Animal> entry : pet.entrySet()) {
+//			String ownerName = entry.getKey();
+//			String animalName = entry.getValue().toString();
+//			System.out.println(ownerName + " owns " + animalName + ".");
+//		}
+		//---------------- short version ----------------
+//		pet.forEach((ownerName, animal) -> {
+//			System.out.println(ownerName + " owns " + animal + ".");
+//		});
+		//---------------- linked map iterator version ----------------
+		Iterator<String> iterA = pet.keySet().iterator();
+		Iterator<Animal> iterB = pet.values().iterator();
+		while(iterA.hasNext()) {
+			String ownerName = iterA.next();
+			String animalName = iterB.next().toString();
+			System.out.println(ownerName + " owns " + animalName + ".");
+		}
+		
 	}
 }
 
