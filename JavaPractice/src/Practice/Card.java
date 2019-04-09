@@ -14,9 +14,21 @@ public class Card {
 				cards[index] = new Card(suit, n);
 			}
 		}
-		List<Card> deckofCards = Arrays.asList(cards);
-		Collections.shuffle(deckofCards);
-		System.out.println(deckofCards);
+		List<Card> deckofCards = Arrays.asList(cards); //make a deck of 52 cards
+		Collections.shuffle(deckofCards); //shuffle the cards
+		List<Card> hand = deckofCards.subList(0, 5); //draw a hand of 5 cards
+		System.out.println(hand); //display hand
+		for (int i = 0; i < 10; i++) {
+			Collections.shuffle(deckofCards); //shuffle the cards
+			List<Card> hands = deckofCards.subList(0, 5); //draw a hand of 5 cards
+			System.out.println(hand); //display hand
+		}
+		/*
+		 * [Two of Spades, Three of Diamonds, The Four of Clubs, The Five of Spades, The Six of Clubs]
+		 * [Jack of Clubs, The Queen of Hearts, Queen of Diamonds, The Two of Spades, The Jack of Spades]
+		 * [Five of Diamonds, The Four of Clubs, Five of Hearts, The Five of Spades, The Ace of Hearts]
+		 * [King of Spades, King of Clubs, The Four of Diamonds, King of Hearts, The Queen of Spades]
+		 */
 	}
 	
 	public enum Suit {
