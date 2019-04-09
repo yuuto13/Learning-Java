@@ -6,10 +6,8 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out all features of a class.
- * @version 1.5
- * @Todo
- * 1. sort alphabetically
- * 2. sort with length
+ * @version 2.0
+ * @Todo: add "private"
  */
 
 public class ClassPrinter {
@@ -96,17 +94,38 @@ public class ClassPrinter {
 	}
 	String GetFields() {
 		StringBuilder sb = new StringBuilder();
-		Field[] fields = cl.getDeclaredFields();
-		for(Field f : fields) {
-			if(f != null) 
+		List<Field> fieldList = Arrays.asList(cl.getDeclaredFields());
+		
+		fieldList.sort(Comparator.comparing(Field::getName));
+		fieldList.sort(new Comparator<Field>() {
+			public int compare(Field f1, Field f2) {
+				String type1 = f1.getGenericType().toString();
+				String type2 = f2.getGenericType().toString();
+				return type1.compareTo(type2);
+			}
+		});
+		fieldList.sort(new Comparator<Field>() {
+			public int compare(Field f1, Field f2) {
+				String mod1 = Modifier.toString(f1.getModifiers());
+				String mod2 = Modifier.toString(f2.getModifiers());
+				if(mod1.length() > 0 && mod1.charAt(0) != 'p') mod1 = "private" + mod1;
+				if(mod2.length() > 0 && mod2.charAt(0) != 'p') mod2 = "private" + mod2;
+				return mod1.compareTo(mod2);
+			}
+		});
+		
+		for(Field f : fieldList) {
+			if(f != null)
 				sb.append("    " + f.toGenericString() + ";\n");
 		}
 		return sb.toString();
 	}
 	String GetConstructors() {
 		StringBuilder sb = new StringBuilder();
-		Constructor<?>[] constructors = cl.getDeclaredConstructors();
-		for(Constructor<?> c : constructors) {
+		List<Constructor<?>> constructorList = Arrays.asList(cl.getDeclaredConstructors());
+		constructorList.sort(Comparator.comparing(Constructor::getParameterCount));
+		
+		for(Constructor<?> c : constructorList) {
 			if(c != null)
 				sb.append("    " + c.toGenericString() + ";\n");
 		}
@@ -114,10 +133,23 @@ public class ClassPrinter {
 	}
 	String GetMethods() {
 		StringBuilder sb = new StringBuilder();
-		Method[] methods = cl.getDeclaredMethods();
-		for(Method m : methods) {
+		List<Method> methodList = Arrays.asList(cl.getDeclaredMethods());
+		
+		methodList.sort(Comparator.comparing(Method::getParameterCount));
+		methodList.sort(Comparator.comparing(Method::getName));
+		methodList.sort(new Comparator<Method>() {
+			public int compare(Method m1, Method m2) {
+				String mod1 = Modifier.toString(m1.getModifiers());
+				String mod2 = Modifier.toString(m2.getModifiers());
+				if(mod1.length() > 0 && mod1.charAt(0) != 'p') mod1 = "private" + mod1;
+				if(mod2.length() > 0 && mod2.charAt(0) != 'p') mod2 = "private" + mod2;
+				return mod1.compareTo(mod2);
+			}
+		});
+		
+		for(Method m : methodList) {
 			if(m != null)
-				sb.append("    " + m.toGenericString() + ";\n");
+				sb.append("    " + m + ";\n");
 		}
 		return sb.toString();
 	}
