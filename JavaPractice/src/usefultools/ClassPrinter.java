@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out all features of a class.
- * @version 2.0
+ * @version 2.1
  * @Todo: add "private"
  */
 
@@ -50,7 +50,7 @@ public class ClassPrinter {
 
 	
 	Class<?> cl;
-	Set<String> imports;
+	SortedSet<String> importSet;
 	String packageName = "";
 	String packageStr = "";
 	String mainStr = "";
@@ -59,7 +59,16 @@ public class ClassPrinter {
 	public ClassPrinter(Class<?> cl) {
 		this.cl = cl;
 		this.packageName = cl.getPackageName();
-		imports = new TreeSet<>(Comparator.naturalOrder());
+		
+		//TODO: need more accurate comparing factor for importSet
+		importSet = new TreeSet<>(new Comparator<String>() {
+			public int compare(String a, String b) {
+				if(a.substring(0, 8).compareTo(b.substring(0, 8)) == 0) {
+					return a.length() - b.length();
+				}
+				else return a.compareTo(b);
+			}
+		});
 	}
 	
 	public String printClass() {
@@ -77,13 +86,13 @@ public class ClassPrinter {
 	public String printClassWithImportedPackage() {
 		
 		if(mainStr == "") GetClassString();
-		if(imports.size() == 0) {
+		if(importSet.size() == 0) {
 			oldMain = mainStr;
 			GetImports();
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		for(String i : imports) {
+		for(String i : importSet) {
 			sb.append("import " + i + ";\n");
 		}
 		sb.append("\n");
@@ -92,7 +101,7 @@ public class ClassPrinter {
 		System.out.println(packageStr + importStr + mainStr);
 		return packageStr + importStr + mainStr;
 	}
-	String GetFields() {
+	String GetFields() { //Get Field String
 		StringBuilder sb = new StringBuilder();
 		List<Field> fieldList = Arrays.asList(cl.getDeclaredFields());
 		
@@ -120,7 +129,7 @@ public class ClassPrinter {
 		}
 		return sb.toString();
 	}
-	String GetConstructors() {
+	String GetConstructors() { //Get Constructor String
 		StringBuilder sb = new StringBuilder();
 		List<Constructor<?>> constructorList = Arrays.asList(cl.getDeclaredConstructors());
 		constructorList.sort(Comparator.comparing(Constructor::getParameterCount));
@@ -131,10 +140,10 @@ public class ClassPrinter {
 		}
 		return sb.toString();
 	}
-	String GetMethods() {
+	String GetMethods() { //Get Method String
 		StringBuilder sb = new StringBuilder();
-		List<Method> methodList = Arrays.asList(cl.getDeclaredMethods());
-		
+		List<Method> methodList = new ArrayList<>(Arrays.asList(cl.getDeclaredMethods()));
+
 		methodList.sort(Comparator.comparing(Method::getParameterCount));
 		methodList.sort(Comparator.comparing(Method::getName));
 		methodList.sort(new Comparator<Method>() {
@@ -205,7 +214,7 @@ public class ClassPrinter {
 				
 				String importName = packageName + "." + className;
 				if(importName != getClassName()) {
-					imports.add(importName);
+					importSet.add(importName);
 				}
 				
 				mainStr = mainStr.replace(importName, className);
