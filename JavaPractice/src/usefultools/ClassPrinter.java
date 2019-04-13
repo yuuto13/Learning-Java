@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 /*
  * This class uses reflection library to 
  * print out all features of a class.
- * @version 2.1
+ * @version 2.11 2019-4-13
  * @Todo: add "private"
  */
 
@@ -37,7 +37,7 @@ public class ClassPrinter {
 
 			//classPrinter.printClass();
 			System.out.println();
-			if(version == "y") {
+			if(version.compareTo("y") == 0) {
 				classPrinter.printClass();
 			} else {
 				classPrinter.printClassWithImportedPackage();
